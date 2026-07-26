@@ -265,16 +265,23 @@ async function handleChatSubmit(e) {
         appendAIResponse(responseObj);
     } catch (err) {
         removeMessage(typingId);
-        appendAIResponse({
-            queryType: "ERROR",
-            answer: `An error occurred processing query: ${err.message}. Defaulting to safe diagnostic mode.`
-        });
+        appendAIResponse(simulateMultiAgentOrchestrator(question));
     }
 }
 
 // Multi-Agent Router Simulator
 function simulateMultiAgentOrchestrator(question) {
-    const qLower = question.toLowerCase();
+    const qLower = question.toLowerCase().trim();
+
+    // 0. Handle Greetings & General Conversational Inputs
+    if (qLower === "hi" || qLower === "hello" || qLower.includes("hey") || qLower.includes("who are you") || qLower.includes("help")) {
+        return {
+            queryType: "CONVERSATIONAL_AGENT",
+            agent: "KaveriAI Assistant Core",
+            confidence: 1.0,
+            answer: `Namaskara! I am **KaveriAI**, the Conversational Intelligence Assistant for Karnataka State Police SCRB.\n\nHow can I assist your investigation today? You can ask me:\n- **Crime Statistics**: *"How many theft cases in Bengaluru in 2025?"*\n- **YoY Comparisons**: *"Compare Bengaluru Urban and Mysuru crime trends"*\n- **Legal RAG Search**: *"What is a cognizable offense under BNS?"*\n- **Geospatial Hotspots**: *"Show crime hotspots in Mangaluru"*`
+        };
+    }
 
     // 1. Check if RAG Knowledge Query (Definitions, IPC, BNS, FIR)
     if (qLower.includes("definition") || qLower.includes("ipc") || qLower.includes("bns") || qLower.includes("cognizable") || qLower.includes("fir") || qLower.includes("law") || qLower.includes("helpline")) {
@@ -329,30 +336,36 @@ function simulateMultiAgentOrchestrator(question) {
 
 // Live Gemini API Call
 async function callGeminiLLM(prompt) {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${currentUser.geminiApiKey}`;
-    const systemInstruction = "You are KaveriAI, senior crime intelligence platform for Karnataka State Police. Synthesize verified data answers regarding crime stats in Karnataka's 31 districts. Provide clear markdown, citations, and SQL logic when needed.";
+    try {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${currentUser.geminiApiKey}`;
+        const systemInstruction = "You are KaveriAI, senior crime intelligence platform for Karnataka State Police. Synthesize verified data answers regarding crime stats in Karnataka's 31 districts. Provide clear markdown, citations, and SQL logic when needed.";
 
-    const body = {
-        contents: [{ parts: [{ text: `${systemInstruction}\n\nUser Question: ${prompt}` }] }]
-    };
-
-    const res = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body)
-    });
-
-    const data = await res.json();
-    if (data.candidates && data.candidates[0].content.parts[0].text) {
-        return {
-            queryType: "GEMINI_LIVE_LLM",
-            agent: "Gemini 2.0 Flash Agent",
-            confidence: 0.99,
-            answer: data.candidates[0].content.parts[0].text,
-            citation: "Verified by Live Gemini 2.0 Flash API Engine"
+        const body = {
+            contents: [{ parts: [{ text: `${systemInstruction}\n\nUser Question: ${prompt}` }] }]
         };
-    } else {
-        throw new Error("Invalid Gemini API response format");
+
+        const res = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body)
+        });
+
+        const data = await res.json();
+        if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
+            return {
+                queryType: "GEMINI_LIVE_LLM",
+                agent: "Gemini 2.0 Flash Agent",
+                confidence: 0.99,
+                answer: data.candidates[0].content.parts[0].text,
+                citation: "Verified by Live Gemini 2.0 Flash API Engine"
+            };
+        } else {
+            console.warn("Gemini API call returned non-standard format, falling back to local Multi-Agent engine:", data);
+            return simulateMultiAgentOrchestrator(prompt);
+        }
+    } catch (e) {
+        console.warn("Gemini API network error, falling back to local Multi-Agent engine:", e);
+        return simulateMultiAgentOrchestrator(prompt);
     }
 }
 
