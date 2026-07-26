@@ -1,0 +1,10 @@
+{
+  "project_name": "KaveriAI-KSP-Crime-Intelligence",
+  "client": {
+    "source": "client",
+    "ignore": [
+      "**/node_modules/**",
+      "**/.git/**"
+    ]
+  }
+}
