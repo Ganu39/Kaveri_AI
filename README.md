@@ -6,8 +6,8 @@
 
 ## 🌐 Live Deployment Links
 
-- 🚀 **GitHub Pages Deployed App**: [https://ganu39.github.io/kaveriai/](https://ganu39.github.io/kaveriai/)
-- 📦 **GitHub Repository**: [https://github.com/Ganu39/kaveriai](https://github.com/Ganu39/kaveriai)
+- 🚀 **GitHub Pages Deployed App**: [https://ganu39.github.io/Kaveri_AI/](https://ganu39.github.io/Kaveri_AI/)
+- 📦 **GitHub Repository**: [https://github.com/Ganu39/Kaveri_AI](https://github.com/Ganu39/Kaveri_AI)
 - ☁️ **Zoho Catalyst Web Client**: Pre-configured & ready (`catalyst.json` included)
 
 ---
