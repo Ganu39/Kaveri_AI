@@ -4,6 +4,14 @@
 
 ---
 
+## 🌐 Live Deployment Links
+
+- 🚀 **GitHub Pages Deployed App**: [https://ganu39.github.io/kaveriai/](https://ganu39.github.io/kaveriai/)
+- 📦 **GitHub Repository**: [https://github.com/Ganu39/kaveriai](https://github.com/Ganu39/kaveriai)
+- ☁️ **Zoho Catalyst Web Client**: Pre-configured & ready (`catalyst.json` included)
+
+---
+
 ## 📌 Executive Summary
 
 **KaveriAI** is a production-style, multi-agent conversational crime intelligence platform built for the **State Crime Records Bureau (SCRB), Karnataka State Police**. 
@@ -58,11 +66,11 @@ Instead of relying on static dashboards and manual SQL queries across 1,100+ pol
 
 ---
 
-## 🛠️ Tech Stack & Zoho Catalyst Deployment
+## 🛠️ Tech Stack & Deployment
 
 - **Frontend**: HTML5, Tailwind CSS, Lucide Icons, Chart.js, Leaflet JS, html2pdf
 - **Backend / AI Engine**: JavaScript Multi-Agent Orchestrator + Gemini 2.0 Flash Integration API
-- **Deployment Platform**: **Zoho Catalyst (Web Client App Services)**
+- **Deployment**: GitHub Pages & **Zoho Catalyst (Web Client App Services)**
 
 ---
 
@@ -100,7 +108,7 @@ catalyst deploy
 ```
 Choose your Catalyst Project and deploy the **Web Client (`client/` folder)**.
 
-Alternatively, you can compress the `client/` folder into a `.zip` file and upload it directly under **Zoho Catalyst Console → Web Client → Upload Build**.
+Alternatively, you can compress the `client/` folder into a `.zip` file and upload it directly under **Zoho Catalyst Console → Web Client / Slate → Upload Build**.
 
 ---
 
